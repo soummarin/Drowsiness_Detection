@@ -8,7 +8,12 @@
 """
 
 import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')  # VERY IMPORTANT: Prevents macOS 'mutex.cc RAW: Lock blocking' deadlock!
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
@@ -54,7 +59,8 @@ def load_images(class_pairs):
     Returns X (N, IMG_SIZE, IMG_SIZE, 1), y (N,)
     """
     X, y = [], []
-    for label, folder in class_pairs:
+    for p in class_pairs:
+        label, folder = p[0], p[1]
         if not os.path.isdir(folder):
             print(f"[WARNING] Folder not found: {folder}")
             continue
